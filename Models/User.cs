@@ -30,5 +30,9 @@ namespace ECommerceApp.Models
         [Required(ErrorMessage = "Address is required")] // The Address field is required.
         [StringLength(200, ErrorMessage = "Address length can't be more than 200 characters.")] // Limiting the length of Address to 200 characters.
         public string Address { get; set; }
+
+        [Required] // The UserType field is required.
+        [Range(0, 1, ErrorMessage = "UserType must be either 0 (User) or 1 (Admin)")]
+        public int UserType { get; set; } = 0; // Default value is 0 (User)
     }
 }

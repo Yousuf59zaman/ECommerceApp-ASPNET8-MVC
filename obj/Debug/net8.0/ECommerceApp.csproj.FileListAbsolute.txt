@@ -141,3 +141,4 @@ F:\Projects\BDJOBS\ECommerceApp\ECommerceApp\obj\Debug\net8.0\refint\ECommerceAp
 F:\Projects\BDJOBS\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ECommerceApp.pdb
 F:\Projects\BDJOBS\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ECommerceApp.genruntimeconfig.cache
 F:\Projects\BDJOBS\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ref\ECommerceApp.dll
+F:\Projects\BDJOBS\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ECommerceApp.sourcelink.json
