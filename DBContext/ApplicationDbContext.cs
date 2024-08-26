@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using ECommerceApp.Models;
+
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using ECommerceApp.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace ECommerceApp.DBContext
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        //Tables
-        public DbSet<User> Users { get; set; }
-
+        // DbSets for other tables (e.g., Products, Orders, etc.)
     }
 
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
