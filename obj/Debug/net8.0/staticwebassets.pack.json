@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\images\\galaxys21.jpg",
+      "PackagePath": "staticwebassets\\images\\galaxys21.jpg"
+    },
+    {
+      "Id": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\images\\iphone 13.jpg",
+      "PackagePath": "staticwebassets\\images\\iphone 13.jpg"
+    },
+    {
       "Id": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

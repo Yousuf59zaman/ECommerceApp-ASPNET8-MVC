@@ -1,8 +1,27 @@
-﻿@{
+﻿@model IEnumerable<ECommerceApp.ViewModels.ProductViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome to ECommerceApp</h1>
     <p>Explore our categories and products!</p>
+</div>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img class="card-img-top" src="@product.ProductImage" alt="@product.ProductName">
+                <div class="card-body">
+                    <h5 class="card-title">@product.ProductName</h5>
+                    <p class="card-text">@product.ProductDesc</p>
+                    <p class="card-text"><strong>Price:</strong> $@product.ProductUnitPrice</p>
+                    <p class="card-text"><strong>Category:</strong> @product.CategoryName</p>
+                </div>
+            </div>
+        </div>
+    }
 </div>
