@@ -286,3 +286,4 @@ G:\Yousuf\ECommerceApp\ECommerceApp\obj\Debug\net8.0\refint\ECommerceApp.dll
 G:\Yousuf\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ECommerceApp.pdb
 G:\Yousuf\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ECommerceApp.genruntimeconfig.cache
 G:\Yousuf\ECommerceApp\ECommerceApp\obj\Debug\net8.0\ref\ECommerceApp.dll
+G:\Yousuf\ECommerceApp\ECommerceApp\bin\Debug\net8.0\Newtonsoft.Json.dll

@@ -20,6 +20,10 @@
                     <p class="card-text">@product.ProductDesc</p>
                     <p class="card-text"><strong>Price:</strong> $@product.ProductUnitPrice</p>
                     <p class="card-text"><strong>Category:</strong> @product.CategoryName</p>
+                    <form asp-action="AddToCart" method="post">
+                        <input type="hidden" name="productId" value="@product.ProductId" />
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
                 </div>
             </div>
         </div>

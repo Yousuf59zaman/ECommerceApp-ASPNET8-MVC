@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "C4OssNw1Nlv129WCcHf7vRE9Bc8btOWajuUI1ZhVWSo=",
+  "Hash": "GZXB1yHGXDEAVaPWUleSHfi7Qa5gppzA231G5hAkMoY=",
   "Source": "ECommerceApp",
   "BasePath": "_content/ECommerceApp",
   "Mode": "Default",
@@ -112,12 +112,12 @@
       "OriginalItemSpec": "wwwroot\\images\\galaxys21.jpg"
     },
     {
-      "Identity": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\images\\iphone 13.jpg",
+      "Identity": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\images\\iphone13.jpg",
       "SourceId": "ECommerceApp",
       "SourceType": "Discovered",
       "ContentRoot": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\",
       "BasePath": "_content/ECommerceApp",
-      "RelativePath": "images/iphone 13.jpg",
+      "RelativePath": "images/iphone13.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -128,7 +128,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\iphone 13.jpg"
+      "OriginalItemSpec": "wwwroot\\images\\iphone13.jpg"
     },
     {
       "Identity": "G:\\Yousuf\\ECommerceApp\\ECommerceApp\\wwwroot\\js\\site.js",

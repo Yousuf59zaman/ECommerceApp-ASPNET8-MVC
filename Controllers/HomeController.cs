@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json; // For serializing and deserializing objects to and from JSON format in session
+using Newtonsoft.Json;
+using ECommerceApp.Utilities; // For serializing and deserializing objects to and from JSON format in session
 
 
 namespace ECommerceApp.Controllers
@@ -38,8 +39,10 @@ namespace ECommerceApp.Controllers
                 })
                 .ToListAsync();
 
+            ViewBag.CartCount = GetCartCount();
             return View(products);
         }
+
 
         // Add to Cart
         [HttpPost]
