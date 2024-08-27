@@ -2,6 +2,9 @@ using ECommerceApp.DBContext;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ECommerceApp.Identity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,17 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+// Add session and distributed memory cache services
+builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,8 +45,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseSession(); // Enable session state
+
+app.UseAuthentication(); // Ensure authentication is enabled
+app.UseAuthorization(); // Ensure authorization is enabled
 
 app.MapControllerRoute(
     name: "default",

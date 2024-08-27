@@ -5,6 +5,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json; // For serializing and deserializing objects to and from JSON format in session
+
+
 namespace ECommerceApp.Controllers
 {
     public class HomeController : Controller
@@ -33,6 +39,28 @@ namespace ECommerceApp.Controllers
                 .ToListAsync();
 
             return View(products);
+        }
+
+        // Add to Cart
+        [HttpPost]
+        public IActionResult AddToCart(Guid productId)
+        {
+            List<Guid> cart = HttpContext.Session.Get<List<Guid>>("Cart") ?? new List<Guid>();
+
+            if (!cart.Contains(productId))
+            {
+                cart.Add(productId);
+                HttpContext.Session.Set("Cart", cart);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // Get Cart Count
+        public int GetCartCount()
+        {
+            var cart = HttpContext.Session.Get<List<Guid>>("Cart");
+            return cart?.Count ?? 0;
         }
 
         public IActionResult Contact()
