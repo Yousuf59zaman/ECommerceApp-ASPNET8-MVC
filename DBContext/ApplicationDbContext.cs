@@ -21,7 +21,7 @@ namespace ECommerceApp.DBContext
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 
-     /*   protected override void OnModelCreating(ModelBuilder modelBuilder)
+       protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -66,7 +66,7 @@ namespace ECommerceApp.DBContext
                     CategoryId = electronicsCategoryId
                 }
             );
-        }*/
+        }
     }
 
 
