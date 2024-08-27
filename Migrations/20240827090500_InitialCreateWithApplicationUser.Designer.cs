@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240826154144_InitialCreateWithApplicationUser")]
+    [Migration("20240827090500_InitialCreateWithApplicationUser")]
     partial class InitialCreateWithApplicationUser
     {
         /// <inheritdoc />
