@@ -44,17 +44,23 @@ namespace ECommerceApp.Controllers
         }
 
 
+       
         // Add to Cart
         [HttpPost]
-        public IActionResult AddToCart(Guid productId)
+        public IActionResult AddToCart(Guid productId, int quantity)
         {
-            List<Guid> cart = HttpContext.Session.Get<List<Guid>>("Cart") ?? new List<Guid>();
+            var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart") ?? new Dictionary<Guid, int>();
 
-            if (!cart.Contains(productId))
+            if (cart.ContainsKey(productId))
             {
-                cart.Add(productId);
-                HttpContext.Session.Set("Cart", cart);
+                cart[productId] += quantity;  // Update quantity if the product is already in the cart
             }
+            else
+            {
+                cart.Add(productId, quantity);  // Add new product with the specified quantity
+            }
+
+            HttpContext.Session.Set("Cart", cart);
 
             return RedirectToAction("Index");
         }
@@ -62,17 +68,17 @@ namespace ECommerceApp.Controllers
         // Get Cart Count
         public int GetCartCount()
         {
-            var cart = HttpContext.Session.Get<List<Guid>>("Cart");
+            var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart");
             return cart?.Count ?? 0;
         }
 
-
+        // Cart Action
         public IActionResult Cart()
         {
-            var cart = HttpContext.Session.Get<List<Guid>>("Cart") ?? new List<Guid>();
+            var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart") ?? new Dictionary<Guid, int>();
 
             var productsInCart = _context.Products
-                .Where(p => cart.Contains(p.ProductId))
+                .Where(p => cart.Keys.Contains(p.ProductId))
                 .Select(p => new ProductViewModel
                 {
                     ProductId = p.ProductId,
@@ -80,7 +86,8 @@ namespace ECommerceApp.Controllers
                     ProductDesc = p.ProductDesc,
                     ProductUnitPrice = p.ProductUnitPrice,
                     ProductImage = $"/images/{p.ProductImage}",
-                    CategoryName = p.Category.CategoryName
+                    CategoryName = p.Category.CategoryName,
+                    Quantity = cart[p.ProductId]  // Get the quantity from the session cart
                 })
                 .ToList();
 

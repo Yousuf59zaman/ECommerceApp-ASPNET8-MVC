@@ -20,12 +20,36 @@
                     <p class="card-text">@product.ProductDesc</p>
                     <p class="card-text"><strong>Price:</strong> $@product.ProductUnitPrice</p>
                     <p class="card-text"><strong>Category:</strong> @product.CategoryName</p>
-                    <form asp-action="AddToCart" method="post">
-                        <input type="hidden" name="productId" value="@product.ProductId" />
-                        <button type="submit" class="btn btn-primary">Add to Cart</button>
-                    </form>
+                    <div class="d-flex justify-content-between">
+                        <form asp-action="AddToCart" method="post" class="d-inline-flex">
+                            <input type="hidden" name="productId" value="@product.ProductId" />
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(this, -1)">-</button>
+                                </span>
+                                <input type="text" name="quantity" value="1" class="form-control text-center" style="width: 50px;" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(this, 1)">+</button>
+                                </span>
+                            </div>
+                            <button type="submit" class="btn btn-primary ml-2">Add to Cart</button>
+                        </form>
+                    </div>
+                    <a asp-action="ProductDetails" asp-route-id="@product.ProductId" class="btn btn-info mt-2">View Details</a>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        function changeQuantity(button, increment) {
+            var input = button.parentElement.parentElement.querySelector('input[name="quantity"]');
+            var currentValue = parseInt(input.value);
+            if (currentValue + increment > 0) {
+                input.value = currentValue + increment;
+            }
+        }
+    </script>
+}
