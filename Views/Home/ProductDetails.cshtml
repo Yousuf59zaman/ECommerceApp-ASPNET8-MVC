@@ -1,0 +1,40 @@
+﻿@model ECommerceApp.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="text-center">
+    <h2>@Model.ProductName</h2>
+    <img src="@Model.ProductImage" alt="@Model.ProductName" class="img-fluid" />
+    <p><strong>Price:</strong> $@Model.ProductUnitPrice</p>
+    <p><strong>Description:</strong> @Model.ProductDesc</p>
+    <p><strong>Category:</strong> @Model.CategoryName</p>
+
+    <form asp-action="AddToCart" method="post">
+        <input type="hidden" name="productId" value="@Model.ProductId" />
+        <div class="input-group mb-3" style="max-width: 150px; margin: auto;">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(this, -1)">-</button>
+            </span>
+            <input type="text" name="quantity" value="1" class="form-control text-center" style="width: 50px;" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(this, 1)">+</button>
+            </span>
+        </div>
+        <button type="submit" class="btn btn-primary">Add to Cart</button>
+    </form>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Back to Products</a>
+</div>
+
+@section Scripts {
+    <script>
+        function changeQuantity(button, increment) {
+            var input = button.parentElement.parentElement.querySelector('input[name="quantity"]');
+            var currentValue = parseInt(input.value);
+            if (currentValue + increment > 0) {
+                input.value = currentValue + increment;
+            }
+        }
+    </script>
+}

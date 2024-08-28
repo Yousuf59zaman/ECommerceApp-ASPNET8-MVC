@@ -110,6 +110,32 @@ namespace ECommerceApp.Controllers
         }
 
 
+        // Product Details
+        public async Task<IActionResult> ProductDetails(Guid id)
+        {
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.ProductId == id)
+                .Select(p => new ProductViewModel
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDesc = p.ProductDesc,
+                    ProductUnitPrice = p.ProductUnitPrice,
+                    ProductImage = $"/images/{p.ProductImage}",
+                    CategoryName = p.Category.CategoryName
+                })
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+      
         // Edit product (dummy implementation for now, you can expand this)
         public IActionResult EditProduct(Guid id)
         {
