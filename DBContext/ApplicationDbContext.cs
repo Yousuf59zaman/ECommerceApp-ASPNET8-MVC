@@ -20,8 +20,11 @@ namespace ECommerceApp.DBContext
         // DbSets for Products and Categories
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
-
-       protected override void OnModelCreating(ModelBuilder modelBuilder)
+        // DbSets for new tables
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
