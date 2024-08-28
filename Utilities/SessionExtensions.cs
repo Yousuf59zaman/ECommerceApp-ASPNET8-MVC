@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-
 namespace ECommerceApp.Utilities
 {
-
     public static class SessionExtensions
     {
         public static void Set<T>(this ISession session, string key, T value)
@@ -18,5 +16,4 @@ namespace ECommerceApp.Utilities
             return value == null ? default : JsonConvert.DeserializeObject<T>(value);
         }
     }
-
 }

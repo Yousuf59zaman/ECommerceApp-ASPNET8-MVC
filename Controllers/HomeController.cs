@@ -97,14 +97,18 @@ namespace ECommerceApp.Controllers
         // Remove product from cart
         public IActionResult RemoveFromCart(Guid id)
         {
-            var cart = HttpContext.Session.Get<List<Guid>>("Cart") ?? new List<Guid>();
+            var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart") ?? new Dictionary<Guid, int>();
 
-            cart.Remove(id);
+            if (cart.ContainsKey(id))
+            {
+                cart.Remove(id);  // Remove the product from the cart
+            }
 
             HttpContext.Session.Set("Cart", cart);
 
             return RedirectToAction("Cart");
         }
+
 
         // Edit product (dummy implementation for now, you can expand this)
         public IActionResult EditProduct(Guid id)

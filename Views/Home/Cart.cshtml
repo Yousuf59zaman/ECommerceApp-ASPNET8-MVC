@@ -18,7 +18,8 @@ else
                 <th>Product Name</th>
                 <th>Description</th>
                 <th>Price</th>
-                <th>Category</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -29,9 +30,21 @@ else
                     <td>@product.ProductName</td>
                     <td>@product.ProductDesc</td>
                     <td>$@product.ProductUnitPrice</td>
-                    <td>@product.CategoryName</td>
                     <td>
-                        <a asp-action="EditProduct" asp-route-id="@product.ProductId" class="btn btn-warning btn-sm">Edit</a>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(this, -1, '@product.ProductId')">-</button>
+                            </span>
+                            <input type="text" id="quantity-@product.ProductId" value="@product.Quantity" class="form-control text-center" style="width: 50px;" readonly />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(this, 1, '@product.ProductId')">+</button>
+                            </span>
+                        </div>
+                    </td>
+                    <td id="totalPrice-@product.ProductId" data-unitprice="@product.ProductUnitPrice">
+                        $@(@product.ProductUnitPrice * product.Quantity)
+                    </td>
+                    <td>
                         <a asp-action="RemoveFromCart" asp-route-id="@product.ProductId" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
@@ -43,4 +56,35 @@ else
         <a asp-action="Index" class="btn btn-secondary">Go Back to Shopping</a>
         <a asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
     </div>
+}
+
+@section Scripts {
+    <script>
+        function getAntiForgeryToken() {
+            return document.querySelector('input[name="__RequestVerificationToken"]').value;
+        }
+
+        function changeQuantity(button, increment, productId) {
+            var input = document.getElementById('quantity-' + productId);
+            var currentValue = parseInt(input.value);
+            if (currentValue + increment > 0) {
+                var newQuantity = currentValue + increment;
+                input.value = newQuantity;
+
+                // Update total price
+                var unitPrice = parseFloat(document.getElementById('totalPrice-' + productId).getAttribute('data-unitprice'));
+                document.getElementById('totalPrice-' + productId).innerText = '$' + (unitPrice * newQuantity).toFixed(2);
+
+                // Send the updated quantity to the server to update the session
+                fetch('@Url.Action("UpdateCartQuantity", "Home")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': getAntiForgeryToken()
+                    },
+                    body: JSON.stringify({ productId: productId, quantity: newQuantity })
+                });
+            }
+        }
+    </script>
 }
