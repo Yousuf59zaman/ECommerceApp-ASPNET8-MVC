@@ -66,8 +66,9 @@
                 </ul>
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Cart (@ViewBag.CartCount)</a>
+                        <a class="nav-link" asp-controller="Home" asp-action="Cart">Cart (@ViewBag.CartCount)</a>
                     </li>
+
 
                     @if (User.Identity.IsAuthenticated)
                     {

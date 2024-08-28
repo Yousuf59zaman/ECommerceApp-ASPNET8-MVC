@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ECommerceApp.ViewModels.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<h2>Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td>@product.ProductDesc</td>
+                    <td>$@product.ProductUnitPrice</td>
+                    <td>@product.CategoryName</td>
+                    <td>
+                        <a asp-action="EditProduct" asp-route-id="@product.ProductId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="RemoveFromCart" asp-route-id="@product.ProductId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">Go Back to Shopping</a>
+        <a asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
+    </div>
+}
