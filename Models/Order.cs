@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Collections.Generic;
 
 
 namespace ECommerceApp.Models
@@ -35,5 +36,7 @@ namespace ECommerceApp.Models
         public int? PaymentID { get; set; }  // Nullable foreign key, as payment might be made later
 
         public Payment Payment { get; set; }  // Navigation property
+
+        public ICollection<OrderDetails> OrderDetails { get; set; }  // Navigation property to OrderDetails
     }
 }
