@@ -9,21 +9,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ECommerceApp.Utilities;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
+using ECommerceApp.Identity;
 
 namespace ECommerceApp.Controllers
 {
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public OrderController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // Checkout action to display order summary
-        public IActionResult Checkout()
+        public async Task<IActionResult> Checkout()
         {
+            // Get the current user
+            var user = await _userManager.GetUserAsync(User);
+
+            // Get cart from session
             var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart") ?? new Dictionary<Guid, int>();
 
             var productsInCart = _context.Products
@@ -42,13 +53,21 @@ namespace ECommerceApp.Controllers
 
             ViewBag.TotalAmount = productsInCart.Sum(p => p.ProductUnitPrice * p.Quantity);
 
+            // Pass the user's address to the view
+            ViewBag.ShippingAddress = user.Address;
+
             return View(productsInCart);
         }
 
+
         // Method to handle the order submission
         [HttpPost]
-        public async Task<IActionResult> PlaceOrder()
+        public async Task<IActionResult> PlaceOrder(string ShippingAddress, string PaymentMethod)
         {
+            // Get the current user
+            var user = await _userManager.GetUserAsync(User);
+
+            // Get cart from session
             var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart") ?? new Dictionary<Guid, int>();
 
             if (!cart.Any())
@@ -56,45 +75,60 @@ namespace ECommerceApp.Controllers
                 return RedirectToAction("Cart", "Home");
             }
 
-            var userId = User.Identity.Name;
+            // Calculate the total amount
+            decimal totalAmount = 0;
+            var orderDetails = new List<OrderDetails>();
 
-            // Create an order
+            foreach (var item in cart)
+            {
+                var product = await _context.Products.FindAsync(item.Key);
+                if (product != null)
+                {
+                    totalAmount += product.ProductUnitPrice * item.Value;
+
+                    orderDetails.Add(new OrderDetails
+                    {
+                        ProductID = product.ProductId,
+                        Quantity = item.Value,
+                        UnitPrice = product.ProductUnitPrice,
+                        Total = product.ProductUnitPrice * item.Value // Ensure this value is set
+                    });
+                }
+            }
+
+
+
+            // Create Order
             var order = new Order
             {
-                CustomerID = userId,
-                OrderDate = DateTime.Now,
+                CustomerID = user.Id,
                 OrderStatus = "Pending",
-                TotalAmount = cart.Sum(c => c.Value * _context.Products.Find(c.Key).ProductUnitPrice),
-                ShippingAddress = "Your Shipping Address" // Add your logic to capture shipping address
+                TotalAmount = totalAmount,
+                ShippingAddress = ShippingAddress,
+                OrderDetails = orderDetails
             };
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            // Create order details
-            foreach (var item in cart)
+            // Create Payment
+            var payment = new Payment
             {
-                var product = _context.Products.Find(item.Key);
+                OrderID = order.OrderID,
+                PaymentAmount = totalAmount,
+                Method = PaymentMethod
+            };
 
-                var orderDetails = new OrderDetails
-                {
-                    OrderID = order.OrderID,
-                    ProductID = item.Key,
-                    Quantity = item.Value,
-                    UnitPrice = product.ProductUnitPrice,
-                    Total = product.ProductUnitPrice * item.Value
-                };
-
-                _context.OrderDetails.Add(orderDetails);
-            }
-
+            _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
 
             // Clear the cart
             HttpContext.Session.Remove("Cart");
 
-            return RedirectToAction("OrderConfirmation", new { id = order.OrderID });
+            // Redirect to a confirmation page or back to the home page
+            return RedirectToAction("OrderConfirmation", new { orderId = order.OrderID });
         }
+
 
         // Order confirmation view
         public async Task<IActionResult> OrderConfirmation(int id)
