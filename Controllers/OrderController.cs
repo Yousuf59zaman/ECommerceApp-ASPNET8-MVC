@@ -40,9 +40,7 @@ namespace ECommerceApp.Controllers
                 })
                 .ToList();
 
-            // Calculate total amount
-            decimal totalAmount = productsInCart.Sum(p => p.ProductUnitPrice * p.Quantity);
-            ViewBag.TotalAmount = totalAmount;
+            ViewBag.TotalAmount = productsInCart.Sum(p => p.ProductUnitPrice * p.Quantity);
 
             return View(productsInCart);
         }

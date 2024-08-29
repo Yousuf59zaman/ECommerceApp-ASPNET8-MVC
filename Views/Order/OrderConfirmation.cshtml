@@ -1,0 +1,39 @@
+﻿@model ECommerceApp.Models.Order
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<h2>Order Confirmation</h2>
+
+<p>Thank you for your order! Your order number is <strong>@Model.OrderID</strong>.</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model.OrderDetails)
+        {
+            <tr>
+                <td>@detail.Product.ProductName</td>
+                <td>@detail.Product.ProductDesc</td>
+                <td>$@detail.UnitPrice</td>
+                <td>@detail.Quantity</td>
+                <td>$@(detail.UnitPrice * detail.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-end">
+    <h4>Total Amount: $@Model.TotalAmount</h4>
+</div>
+
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Continue Shopping</a>

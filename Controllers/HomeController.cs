@@ -110,6 +110,36 @@ namespace ECommerceApp.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]  // Ensure the token is validated
+        public IActionResult UpdateCartQuantity([FromBody] UpdateCartQuantityModel model)
+        {
+            var cart = HttpContext.Session.Get<Dictionary<Guid, int>>("Cart") ?? new Dictionary<Guid, int>();
+
+            if (cart.ContainsKey(model.ProductId))
+            {
+                if (model.Quantity > 0)
+                {
+                    cart[model.ProductId] = model.Quantity;  // Update quantity in the session
+                }
+                else
+                {
+                    cart.Remove(model.ProductId);  // If the quantity is zero or less, remove the item
+                }
+            }
+
+            HttpContext.Session.Set("Cart", cart);
+
+            return Ok();  // Return a success response
+        }
+
+        // Model for updating the cart quantity
+        public class UpdateCartQuantityModel
+        {
+            public Guid ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
+
         // Product Details
         public async Task<IActionResult> ProductDetails(Guid id)
         {

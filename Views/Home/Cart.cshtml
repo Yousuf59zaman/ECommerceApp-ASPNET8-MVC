@@ -6,6 +6,11 @@
 
 <h2>Your Cart</h2>
 
+<!-- Add a hidden form to include the anti-forgery token -->
+<form id="cart-update-form">
+    @Html.AntiForgeryToken()
+</form>
+
 @if (!Model.Any())
 {
     <p>Your cart is empty.</p>
@@ -54,14 +59,15 @@ else
 
     <div class="d-flex justify-content-between">
         <a asp-action="Index" class="btn btn-secondary">Go Back to Shopping</a>
-        <a asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
+        <a asp-action="Checkout" asp-controller="Order" class="btn btn-primary">Proceed to Checkout</a>
     </div>
 }
 
 @section Scripts {
     <script>
         function getAntiForgeryToken() {
-            return document.querySelector('input[name="__RequestVerificationToken"]').value;
+            // Retrieve the anti-forgery token from the hidden form
+            return document.querySelector('#cart-update-form input[name="__RequestVerificationToken"]').value;
         }
 
         function changeQuantity(button, increment, productId) {
@@ -71,7 +77,7 @@ else
                 var newQuantity = currentValue + increment;
                 input.value = newQuantity;
 
-                // Update total price
+                // Update total price immediately in the UI
                 var unitPrice = parseFloat(document.getElementById('totalPrice-' + productId).getAttribute('data-unitprice'));
                 document.getElementById('totalPrice-' + productId).innerText = '$' + (unitPrice * newQuantity).toFixed(2);
 
@@ -83,7 +89,15 @@ else
                         'RequestVerificationToken': getAntiForgeryToken()
                     },
                     body: JSON.stringify({ productId: productId, quantity: newQuantity })
-                });
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Quantity updated successfully in session.');
+                        } else {
+                            console.error('Failed to update quantity.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
         }
     </script>

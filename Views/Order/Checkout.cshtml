@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ECommerceApp.ViewModels.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Checkout</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td>@product.ProductDesc</td>
+                    <td>$@product.ProductUnitPrice</td>
+                    <td>@product.Quantity</td>
+                    <td>$@(@product.ProductUnitPrice * product.Quantity)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end">
+        <h4>Total Amount: $@ViewBag.TotalAmount</h4>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-action="Cart" asp-controller="Home" class="btn btn-secondary">Back to Cart</a>
+        <form asp-action="PlaceOrder" method="post">
+            <button type="submit" class="btn btn-success">Place Order</button>
+        </form>
+    </div>
+}
