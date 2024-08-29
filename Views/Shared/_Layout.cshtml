@@ -78,6 +78,9 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Show Profile</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Order" asp-action="OrderHistory">Track Orders</a>
+                                </li>
                                 <li>
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="dropdown-item">
                                         <button type="submit" class="btn btn-link dropdown-item" style="padding: 0; margin: 0; border: none; background: none; color: inherit; text-align: left;">

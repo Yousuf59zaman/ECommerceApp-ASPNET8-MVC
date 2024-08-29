@@ -130,16 +130,18 @@ namespace ECommerceApp.Controllers
 
             // Redirect to a confirmation page or back to the home page
             return RedirectToAction("OrderConfirmation", new { orderId = order.OrderID });
+
         }
 
 
         // Order confirmation view
-        public async Task<IActionResult> OrderConfirmation(int id)
+        [HttpGet("OrderConfirmation/{orderId}")]
+        public async Task<IActionResult> OrderConfirmation(int orderId)
         {
             var order = await _context.Orders
                 .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Product)  // Include related Product data in OrderDetails
-                .FirstOrDefaultAsync(o => o.OrderID == id);
+                .ThenInclude(od => od.Product)
+                .FirstOrDefaultAsync(o => o.OrderID == orderId);
 
             if (order == null)
             {
@@ -148,6 +150,23 @@ namespace ECommerceApp.Controllers
 
             return View(order);
         }
+
+        public async Task<IActionResult> OrderHistory()
+        {
+            // Get the current user
+            var user = await _userManager.GetUserAsync(User);
+
+            // Fetch orders for the current user
+            var orders = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .Where(o => o.CustomerID == user.Id)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
+
 
     }
 }
