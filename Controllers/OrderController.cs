@@ -96,8 +96,6 @@ namespace ECommerceApp.Controllers
                 }
             }
 
-
-
             // Create Order
             var order = new Order
             {
@@ -109,7 +107,7 @@ namespace ECommerceApp.Controllers
             };
 
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Save here to generate OrderID
 
             // Create Payment
             var payment = new Payment
@@ -120,7 +118,12 @@ namespace ECommerceApp.Controllers
             };
 
             _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Save the payment to generate PaymentID
+
+            // Update Order with PaymentID
+            order.PaymentID = payment.PaymentID;
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync(); // Save changes to update the PaymentID in the Order
 
             // Clear the cart
             HttpContext.Session.Remove("Cart");
