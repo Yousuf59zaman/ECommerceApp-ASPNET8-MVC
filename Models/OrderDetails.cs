@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
 
-
 namespace ECommerceApp.Models
 {
     public class OrderDetails

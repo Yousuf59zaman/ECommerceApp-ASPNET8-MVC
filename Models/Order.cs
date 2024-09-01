@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System;
 using System.Collections.Generic;
 
+using System;
+using System.Collections.Generic;
+
 
 namespace ECommerceApp.Models
 {
@@ -32,9 +35,9 @@ namespace ECommerceApp.Models
         [MaxLength(250)]
         public string ShippingAddress { get; set; }
 
-        [ForeignKey("Payment")]
         public int? PaymentID { get; set; }  // Nullable foreign key, as payment might be made later
 
+        [InverseProperty("Order")]
         public Payment Payment { get; set; }  // Navigation property
 
         public ICollection<OrderDetails> OrderDetails { get; set; }  // Navigation property to OrderDetails

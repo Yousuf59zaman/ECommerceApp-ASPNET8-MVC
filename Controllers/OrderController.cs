@@ -61,6 +61,7 @@ namespace ECommerceApp.Controllers
 
 
         // Method to handle the order submission
+        // Method to handle the order submission
         [HttpPost]
         public async Task<IActionResult> PlaceOrder(string ShippingAddress, string PaymentMethod)
         {
@@ -114,7 +115,8 @@ namespace ECommerceApp.Controllers
             {
                 OrderID = order.OrderID,
                 PaymentAmount = totalAmount,
-                Method = PaymentMethod
+                Method = PaymentMethod,
+                Status = PaymentStatus.Pending  // Set initial status to Pending
             };
 
             _context.Payments.Add(payment);
@@ -130,7 +132,6 @@ namespace ECommerceApp.Controllers
 
             // Redirect to a confirmation page or back to the home page
             return RedirectToAction("OrderConfirmation", new { orderId = order.OrderID });
-
         }
 
 

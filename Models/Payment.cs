@@ -2,18 +2,28 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using System;
+
+
 namespace ECommerceApp.Models
 {
+    public enum PaymentStatus
+    {
+        Pending,
+        Successful
+    }
+
     public class Payment
     {
         [Key]
         public int PaymentID { get; set; }
 
         [Required]
-        [ForeignKey("Order")]
-        public int OrderID { get; set; }  // Foreign key to Order
+        public int OrderID { get; set; } // Foreign key to Order
 
-        public Order Order { get; set; }  // Navigation property
+        [ForeignKey("OrderID")]
+        [InverseProperty("Payment")]
+        public Order Order { get; set; } // Navigation property
 
         public DateTime PaymentDate { get; set; } = DateTime.Now;
 
@@ -23,6 +33,10 @@ namespace ECommerceApp.Models
 
         [Required]
         [MaxLength(50)]
-        public string Method { get; set; }  // Payment method, e.g., "COD", "Credit Card"
+        public string Method { get; set; } // Payment method, e.g., "COD", "Credit Card"
+
+        [Required]
+        public PaymentStatus Status { get; set; } // Payment status
     }
 }
+

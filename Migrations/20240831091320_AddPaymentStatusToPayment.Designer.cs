@@ -4,6 +4,7 @@ using ECommerceApp.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240831091320_AddPaymentStatusToPayment")]
+    partial class AddPaymentStatusToPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,13 +129,13 @@ namespace ECommerceApp.Migrations
                     b.HasData(
                         new
                         {
-                            CategoryId = new Guid("bb2bc0ae-60b0-4646-b524-b8713979a051"),
+                            CategoryId = new Guid("03af819f-6b91-4ab2-a3a8-18bc3b569a6d"),
                             CategoryName = "Mobile Phones",
                             CategoryType = "Electronics"
                         },
                         new
                         {
-                            CategoryId = new Guid("48645d15-498d-45e8-88e3-f896f0040863"),
+                            CategoryId = new Guid("f89cb0d7-a2d6-406b-97da-ffacfe7a4dcf"),
                             CategoryName = "Refrigerators",
                             CategoryType = "Home Appliances"
                         });
@@ -172,6 +175,8 @@ namespace ECommerceApp.Migrations
                     b.HasKey("OrderID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("PaymentID");
 
                     b.ToTable("Orders");
                 });
@@ -235,8 +240,7 @@ namespace ECommerceApp.Migrations
 
                     b.HasKey("PaymentID");
 
-                    b.HasIndex("OrderID")
-                        .IsUnique();
+                    b.HasIndex("OrderID");
 
                     b.ToTable("Payments");
                 });
@@ -273,8 +277,8 @@ namespace ECommerceApp.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("2341cd02-cc60-400e-ad74-422810e051b7"),
-                            CategoryId = new Guid("bb2bc0ae-60b0-4646-b524-b8713979a051"),
+                            ProductId = new Guid("c1f25650-4973-4c76-91f9-cd6b3417e0cc"),
+                            CategoryId = new Guid("03af819f-6b91-4ab2-a3a8-18bc3b569a6d"),
                             ProductDesc = "Latest Apple iPhone 13 with A15 Bionic chip.",
                             ProductImage = "iphone13.jpg",
                             ProductName = "iPhone 13",
@@ -282,8 +286,8 @@ namespace ECommerceApp.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("195fe324-b565-4611-a4a0-0dd3db492e1d"),
-                            CategoryId = new Guid("bb2bc0ae-60b0-4646-b524-b8713979a051"),
+                            ProductId = new Guid("1876e718-3e9e-43fd-b2a4-783f972a6b59"),
+                            CategoryId = new Guid("03af819f-6b91-4ab2-a3a8-18bc3b569a6d"),
                             ProductDesc = "Samsung Galaxy S21 with Exynos 2100.",
                             ProductImage = "galaxys21.jpg",
                             ProductName = "Samsung Galaxy S21",
@@ -432,7 +436,13 @@ namespace ECommerceApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ECommerceApp.Models.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentID");
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("ECommerceApp.Models.OrderDetails", b =>
@@ -457,8 +467,8 @@ namespace ECommerceApp.Migrations
             modelBuilder.Entity("ECommerceApp.Models.Payment", b =>
                 {
                     b.HasOne("ECommerceApp.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("ECommerceApp.Models.Payment", "OrderID")
+                        .WithMany()
+                        .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -535,9 +545,6 @@ namespace ECommerceApp.Migrations
             modelBuilder.Entity("ECommerceApp.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("Payment")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
