@@ -172,6 +172,87 @@ namespace ECommerceApp.Controllers
         }
 
 
+        public async Task<IActionResult> EditOrder(int orderId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.Payment)
+                .FirstOrDefaultAsync(o => o.OrderID == orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditOrderViewModel
+            {
+                OrderID = order.OrderID,
+                OrderStatus = order.OrderStatus,
+                PaymentStatus = order.Payment?.Status ?? PaymentStatus.Pending
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrder(EditOrderViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var order = await _context.Orders
+                    .Include(o => o.Payment)
+                    .FirstOrDefaultAsync(o => o.OrderID == model.OrderID);
+
+                if (order == null)
+                {
+                    return NotFound();
+                }
+
+                // Update order status
+                order.OrderStatus = model.OrderStatus;
+
+                // Update payment status
+                if (order.Payment != null)
+                {
+                    order.Payment.Status = model.PaymentStatus;
+                }
+
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("OrderHistory");
+            }
+
+            return View("EditOrder", model);
+        }
+
+        public async Task<IActionResult> DeleteOrder(int orderId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.Payment)
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.OrderID == orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            // Remove associated payment if exists
+            if (order.Payment != null)
+            {
+                _context.Payments.Remove(order.Payment);
+            }
+
+            // Remove associated order details
+            _context.OrderDetails.RemoveRange(order.OrderDetails);
+
+            // Remove the order
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("OrderHistory");
+        }
+
 
 
     }

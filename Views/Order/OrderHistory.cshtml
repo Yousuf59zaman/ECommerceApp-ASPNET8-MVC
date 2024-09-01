@@ -20,8 +20,8 @@ else
                 <th>Shipping Address</th>
                 <th>Order Status</th>
                 <th>Total Amount</th>
-                <th>Payment Status</th>  <!-- New column for Payment Status -->
-                <th>Details</th>
+                <th>Payment Status</th>
+                <th>Actions</th>  <!-- New column for Edit/Delete actions -->
             </tr>
         </thead>
         <tbody>
@@ -33,9 +33,11 @@ else
                     <td>@order.ShippingAddress</td>
                     <td>@order.OrderStatus</td>
                     <td>$@order.TotalAmount</td>
-                    <td>@order.Payment?.Status</td>  <!-- Display payment status -->
+                    <td>@order.Payment?.Status</td>
                     <td>
                         <a asp-action="OrderConfirmation" asp-route-orderId="@order.OrderID" class="btn btn-info btn-sm">View Details</a>
+                        <a asp-action="EditOrder" asp-route-orderId="@order.OrderID" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="DeleteOrder" asp-route-orderId="@order.OrderID" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
                     </td>
                 </tr>
             }
