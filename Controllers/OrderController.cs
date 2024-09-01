@@ -61,7 +61,6 @@ namespace ECommerceApp.Controllers
 
 
         // Method to handle the order submission
-        // Method to handle the order submission
         [HttpPost]
         public async Task<IActionResult> PlaceOrder(string ShippingAddress, string PaymentMethod)
         {
@@ -110,13 +109,16 @@ namespace ECommerceApp.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync(); // Save here to generate OrderID
 
+            // Determine the payment status based on the selected payment method
+            PaymentStatus paymentStatus = PaymentMethod == "Credit Card" ? PaymentStatus.Successful : PaymentStatus.Pending;
+
             // Create Payment
             var payment = new Payment
             {
                 OrderID = order.OrderID,
                 PaymentAmount = totalAmount,
                 Method = PaymentMethod,
-                Status = PaymentStatus.Pending  // Set initial status to Pending
+                Status = paymentStatus // Set status based on payment method
             };
 
             _context.Payments.Add(payment);
@@ -133,6 +135,7 @@ namespace ECommerceApp.Controllers
             // Redirect to a confirmation page or back to the home page
             return RedirectToAction("OrderConfirmation", new { orderId = order.OrderID });
         }
+
 
 
         // Order confirmation view
@@ -157,8 +160,9 @@ namespace ECommerceApp.Controllers
             // Get the current user
             var user = await _userManager.GetUserAsync(User);
 
-            // Fetch orders for the current user
+            // Fetch orders for the current user, including the Payment data
             var orders = await _context.Orders
+                .Include(o => o.Payment) // Include payment data
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Product)
                 .Where(o => o.CustomerID == user.Id)
@@ -166,6 +170,7 @@ namespace ECommerceApp.Controllers
 
             return View(orders);
         }
+
 
 
 

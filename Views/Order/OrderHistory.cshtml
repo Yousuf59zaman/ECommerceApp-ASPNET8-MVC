@@ -20,6 +20,7 @@ else
                 <th>Shipping Address</th>
                 <th>Order Status</th>
                 <th>Total Amount</th>
+                <th>Payment Status</th>  <!-- New column for Payment Status -->
                 <th>Details</th>
             </tr>
         </thead>
@@ -32,6 +33,7 @@ else
                     <td>@order.ShippingAddress</td>
                     <td>@order.OrderStatus</td>
                     <td>$@order.TotalAmount</td>
+                    <td>@order.Payment?.Status</td>  <!-- Display payment status -->
                     <td>
                         <a asp-action="OrderConfirmation" asp-route-orderId="@order.OrderID" class="btn btn-info btn-sm">View Details</a>
                     </td>
